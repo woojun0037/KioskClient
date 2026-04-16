@@ -9,11 +9,29 @@
     
     <Grid>
         <StackPanel Margin="10">
+            <TextBlock Text="상품명"/>
+            <TextBox x:Name="NameTextBox"
+                     Height="30"
+                     Margin="0,5,0,10"/>
 
-            <Button Content="상품 불러오기"
-                    Height="30"
-                    Click="LoadProducts_Click"/>
+            <TextBlock Text="가격"/>
+            <TextBox x:Name="PriceTextBox"
+                     Height="30"
+                     Margin="0,5,0,10"/>
 
+            <StackPanel Orientation="Horizontal">
+                <Button Content="상품 불러오기"
+                        Width="120"
+                        Height="30"
+                        Click="LoadProducts_Click"/>
+
+                <Button Content="상품 추가"
+                        Width="120"
+                        Height="30"
+                        Margin="10,0,0,0"
+                        Click="CreateProduct_Click"/>
+            </StackPanel>
+            
             <ListBox x:Name="ProductsListBox"
                      Margin="0,10,0,0"
                      Height="300">
@@ -37,6 +55,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            
         </StackPanel>
     </Grid>
 </Window>
