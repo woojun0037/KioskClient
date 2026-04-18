@@ -30,11 +30,25 @@
                         Height="30"
                         Margin="10,0,0,0"
                         Click="CreateProduct_Click"/>
+
+                <Button Content="상품 수정"
+                        Width="120"
+                        Height="30"
+                        Margin="10,0,0,0"
+                        Click="UpdateProduct_Click"/>
+
+                <Button Content="상품 삭제"
+                        Width="120"
+                        Height="30"
+                        Margin="10,0,0,0"
+                        Click="DeleteProduct_Click"/>
             </StackPanel>
-            
+
             <ListBox x:Name="ProductsListBox"
+                     SelectionChanged ="ProductsListBox_SelectionChanged" 
                      Margin="0,10,0,0"
                      Height="300">
+                
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Black"
