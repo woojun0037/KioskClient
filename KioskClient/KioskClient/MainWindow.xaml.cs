@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-using System.Net.Http.Json;
-using System.Printing;
+﻿using System.Printing;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,25 +11,30 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using KioskClient.Models;
+using KioskClient.Services;
 
 namespace KioskClient
 {
     public partial class MainWindow : Window
     {
-        private readonly HttpClient _client;
+        private readonly IProductService _productService;
 
         public MainWindow()
         {
             InitializeComponent();
-
-            var handler = new HttpClientHandler
+            _productService = new ProductService();
+        }
+        private async Task LoadProductsAsync()
+        {
+            try
             {
-                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            };
-
-            _client = new HttpClient(handler);
-            //밑의 주소의 api/products 로 바로 들어갈수 있게 주소를 받아놔둠
-            _client.BaseAddress = new Uri("https://localhost:7183/"); 
+                List<Product>? products = await _productService.GetProductsAsync();
+                ProductsListBox.ItemsSource = products;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"상품을 불러오는 중 오류가 발생했습니다.\n{ex.Message}");
+            }
         }
 
         private async void LoadProducts_Click(object sender, RoutedEventArgs e)
@@ -55,17 +58,23 @@ namespace KioskClient
                     return;
                 }
 
-                CreateaProductRequest request = new CreateaProductRequest
+                if(price <= 0)
+                {
+                    MessageBox.Show("가격은 1 이상이어야 합니다.");
+                    return;
+                }
+
+                CreateProductRequest request = new CreateProductRequest
                 {
                     Name = NameTextBox.Text,
                     Price = price
                 };
 
-                HttpResponseMessage response = await _client.PostAsJsonAsync("api/products", request);
+                bool isSuccess = await _productService.CreateProductAsync(request);
 
-                if(!response.IsSuccessStatusCode)
+                if(!isSuccess)
                 {
-                    MessageBox.Show($"상품 추가 실패 : {response.StatusCode}");
+                    MessageBox.Show($"상품 추가 실패");
                     return;
                 }
                 MessageBox.Show("상품이 추가 되었습니다.");
@@ -117,11 +126,11 @@ namespace KioskClient
                     Price = price
                 };
 
-                var response = await _client.PutAsJsonAsync($"api/products/{selectedProduct.Id}", request);
+                bool isSuccess = await _productService.UpdateProductAsync(selectedProduct.Id, request);
 
-                if(!response.IsSuccessStatusCode)
+                if(!isSuccess)
                 {
-                    MessageBox.Show($"상품 수정 실패 : {response.StatusCode}");
+                    MessageBox.Show($"상품 수정 실패");
                     return;
                 }
                 MessageBox.Show("상품이 수정되었습니다.");
@@ -151,11 +160,10 @@ namespace KioskClient
                     return;
                 }
 
-                HttpResponseMessage response = await _client.DeleteAsync($"api/products/{selectedProduct.Id}");
-                if(!response.IsSuccessStatusCode)
+                bool isSuccess = await _productService.DeleteProductAsync(selectedProduct.Id);
+                if(!isSuccess)
                 {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show($"상품 삭제 실패 : {response.StatusCode}\n{errorMessage}");
+                    MessageBox.Show($"상품 삭제 실패");
                     return;
                 }
 
@@ -169,19 +177,6 @@ namespace KioskClient
             catch(Exception ex)
             {
                 MessageBox.Show($"상품 삭제 중 오류 발생\n{ex.Message}");
-            }
-        }
-
-        private async Task LoadProductsAsync()
-        {
-            try
-            {
-                List<Product>? products = await _client.GetFromJsonAsync<List<Product>>("api/products");
-                ProductsListBox.ItemsSource = products;
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show($"상품을 불러오는 중 오류가 발생했습니다.\n{ex.Message}");
             }
         }
 

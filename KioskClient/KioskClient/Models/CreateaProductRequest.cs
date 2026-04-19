@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KioskClient.Models
 {
-    class CreateaProductRequest
+    public class CreateProductRequest
     {
         public string Name { get; set; } = "";
         public int Price { get; set; }
