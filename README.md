@@ -1,6 +1,6 @@
 # 🖥️ Kiosk Client (WPF + MVVM)
 
-![demo](./assets/demo.gif)
+![KioskClient](./assets/KioskClient.gif)
 
 ## 📌 프로젝트 소개
 WPF 기반 키오스크 클라이언트 애플리케이션입니다.  
