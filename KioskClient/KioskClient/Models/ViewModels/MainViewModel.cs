@@ -22,7 +22,7 @@ namespace KioskClient.Models.ViewModels
 
         private string _productName  = "";
         private string _productPrice = "";
-        private Product _selectProduct;
+        private Product _selectedProduct;
 
         public ObservableCollection<Product> Products { get; } = new ObservableCollection<Product>();
 
@@ -38,18 +38,18 @@ namespace KioskClient.Models.ViewModels
             set { _productPrice = value; OnPropertyChanged();}
         }
 
-        public Product? SelectProduct
+        public Product? SelectedProduct
         {
-            get => _selectProduct;
+            get => _selectedProduct;
             set 
             {
-                _selectProduct = value;
+                _selectedProduct = value;
                 OnPropertyChanged();
 
-                if (_selectProduct != null)
+                if (_selectedProduct != null)
                 {
-                    ProductName  = _selectProduct.Name;
-                    ProductPrice = _selectProduct.Price.ToString();
+                    ProductName  = _selectedProduct.Name;
+                    ProductPrice = _selectedProduct.Price.ToString();
                 }
             }
         }
@@ -58,6 +58,7 @@ namespace KioskClient.Models.ViewModels
         public ICommand CreateProductCommand { get; }
         public ICommand UpdateProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
+        public ICommand NewProductCommand { get; }
 
         public MainViewModel()
         {
@@ -67,8 +68,8 @@ namespace KioskClient.Models.ViewModels
             CreateProductCommand = new RelayCommand(async _ => await CreateProductAsync());
             UpdateProductCommand = new RelayCommand(async _ => await UpdateProductAsync());
             DeleteProductCommand = new RelayCommand(async _ => await DeleteProductAsync());
+            NewProductCommand    = new RelayCommand(_ => ClearInput());
         }
-
 
         public async Task LoadProductAsync()
         {
@@ -91,6 +92,12 @@ namespace KioskClient.Models.ViewModels
         {
             try
             {
+                if(SelectedProduct != null)
+                {
+                    MessageBox.Show("선택된 상품이 있습니다. 새 상품을 추가하려면 선택을 해제해주세요");
+                    return;
+                }
+
                 if(string.IsNullOrWhiteSpace(ProductName))
                 {
                     MessageBox.Show("상품명을 입력해주세요.");
@@ -100,11 +107,13 @@ namespace KioskClient.Models.ViewModels
                 if(!int.TryParse(ProductPrice, out int price))
                 {
                     MessageBox.Show("가격은 숫자로 입력해주세요.");
+                    return;
                 }
 
                 if(price <= 0)
                 {
                     MessageBox.Show("가격은 1 이상이어야 합니다.");
+                    return;
                 }
 
                 CreateProductRequest request = new CreateProductRequest()
@@ -135,7 +144,7 @@ namespace KioskClient.Models.ViewModels
         {
             try 
             {
-                if(SelectProduct == null)
+                if(SelectedProduct == null)
                 {
                     MessageBox.Show("수정 할 상품을 선택해주세요");
                     return;
@@ -164,12 +173,16 @@ namespace KioskClient.Models.ViewModels
                     Name  = ProductName,
                     Price = price
                 };
-
-                bool isSuccess = await _productService.UpdateProductAsync(SelectProduct.Id, request);
+                bool isSuccess = await _productService.UpdateProductAsync(SelectedProduct.Id, request);
                 
                 if(!isSuccess)
                 {
                     MessageBox.Show("상품 수정 실패");
+                    return;
+                }
+                else
+                {
+                    MessageBox.Show("상품이 수정되었습니다.");
                     return;
                 }
 
@@ -186,7 +199,7 @@ namespace KioskClient.Models.ViewModels
         {
             try
             {
-                if(SelectProduct == null)
+                if(SelectedProduct == null)
                 {
                     MessageBox.Show("삭제 할 상품을 선택해주세요");
                     return;
@@ -199,9 +212,9 @@ namespace KioskClient.Models.ViewModels
                     return;
                 }
 
-                bool isSuccess = await _productService.DeleteProductAsync(SelectProduct.Id);
+                bool isSuccess = await _productService.DeleteProductAsync(SelectedProduct.Id);
 
-                if(isSuccess)
+                if(!isSuccess)
                 {
                     MessageBox.Show("상품 삭제 실패");
                     return;
@@ -222,7 +235,7 @@ namespace KioskClient.Models.ViewModels
         {
             ProductName   = "";
             ProductPrice  = "";
-            SelectProduct = null;
+            SelectedProduct = null;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

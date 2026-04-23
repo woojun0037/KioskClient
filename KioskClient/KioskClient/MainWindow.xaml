@@ -23,14 +23,20 @@
                 <Button Content="상품 불러오기"
                         Width="120"
                         Height="30"
-                        Command="{Binding LoadProductsCommand}"/>
+                        Command="{Binding LoadProductCommand}"/>
 
                 <Button Content="상품 추가"
                         Width="120"
                         Height="30"
                         Margin="10,0,0,0"
                         Command="{Binding CreateProductCommand}"/>
-
+                
+                <Button Content="새 상품"
+                        Width="120"
+                        Height="30"
+                        Margin="10,0,0,0"
+                        Command="{Binding NewProductCommand}"/>
+                
                 <Button Content="상품 수정"
                         Width="120"
                         Height="30"
