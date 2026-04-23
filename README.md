@@ -1,5 +1,7 @@
 # 🖥️ Kiosk Client (WPF + MVVM)
 
+![demo](./assets/demo.gif)
+
 ## 📌 프로젝트 소개
 WPF 기반 키오스크 클라이언트 애플리케이션입니다.  
 ASP.NET Core Web API 서버와 통신하여 상품 조회 및 CRUD 기능을 수행하며,  
