@@ -1,15 +1,15 @@
-# 🖥️ Kiosk Client (WPF + MVVM)
+# Kiosk Client (WPF + MVVM)
 
 ![KioskClient](./assets/KioskClient.gif)
 
-## 📌 프로젝트 소개
+## 프로젝트 소개
 WPF 기반 키오스크 클라이언트 애플리케이션입니다.  
 ASP.NET Core Web API 서버와 통신하여 상품 조회 및 CRUD 기능을 수행하며,  
 MVVM 패턴을 적용하여 UI와 로직을 분리했습니다.
 
 ---
 
-## 🛠️ 기술 스택
+## 기술 스택
 
 - **Language**: C#
 - **Framework**: .NET (WPF)
@@ -19,7 +19,7 @@ MVVM 패턴을 적용하여 UI와 로직을 분리했습니다.
 
 ---
 
-## 🧱 프로젝트 구조
+## 프로젝트 구조
 ```
 KioskClient
 ├── Models          # DTO 및 데이터 모델
@@ -29,7 +29,7 @@ KioskClient
 ├── Views           # XAML UI
 └── MainWindow.xaml
 ```
-## 🏗️ 아키텍처
+## 아키텍처
 View (XAML)
 ```
 ↓ Binding
@@ -42,7 +42,7 @@ ASP.NET Core API
 Database (SQLite)
 ```
 
-## ⚙️ 주요 기능
+## 주요 기능
 
 ### 1. 상품 조회 (GET)
 - 서버에서 상품 목록 조회
@@ -62,7 +62,7 @@ Database (SQLite)
 
 ---
 
-## 🔄 데이터 흐름
+## 데이터 흐름
 사용자 입력
 → ViewModel (상태 관리)
 → Service (API 호출)
@@ -73,7 +73,7 @@ Database (SQLite)
 
 ---
 
-## 🎯 MVVM 적용 내용
+## MVVM 적용 내용
 ---
 - Code-behind 최소화
 - Command 패턴 적용 (RelayCommand)
@@ -82,7 +82,7 @@ Database (SQLite)
 - INotifyPropertyChanged 구현
 ---
 
-## 🧩 주요 코드 예시
+## 주요 코드 예시
 
 ### Command 바인딩
 ```xml
@@ -97,13 +97,13 @@ Database (SQLite)
          SelectedItem="{Binding SelectedProduct}" />
 ```
 
-##🚀 실행 방법
+## 실행 방법
 ASP.NET Core API 서버 실행
 WPF 클라이언트 실행
 상품 조회 및 CRUD 기능 사용
 ---
 
-⚠️ 트러블 슈팅
+트러블 슈팅
 ```
 404 오류 → API URL 오타
 HTTPS 문제 → HttpClientHandler 설정
@@ -111,7 +111,7 @@ CS0051 → DTO 접근 제한자 문제 (public 필요)
 인터페이스 오류 → 메서드 구현 누락
 ```
 ---
-📈 향후 개선 방향
+향후 개선 방향
 ---
 - 키오스크 UI (버튼 기반 UX)
 - 장바구니 기능
